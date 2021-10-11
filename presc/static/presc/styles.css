@@ -1,0 +1,26 @@
+table, th, td {
+	border: 1px solid black;
+}
+#sent{
+	box-sizing: border-box;
+	align-items: center;
+	width: 70%;
+	padding: 12px 20px;
+  	margin: 8px 0;
+}
+#button{
+	background-color: #008CBA; /* Green */
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+}
+#text{
+	color: black; transition: .5s; -moz-transition: .5s; -webkit-transition: .5s; -o-transition: .5s; font-family: 'Muli', sans-serif;
+}
+h1{
+	font-family: Helvetica, Arial, sans-serif;
+}
