@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from nltk import word_tokenize
 import pandas as pd
 
+def landing(request):
+	return render(request, "presc/index.html")
+
 def register(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
@@ -38,15 +41,12 @@ def login(request):
 		user = auth.authenticate(request, username=username, password=password)
 		if user is not None:
 			auth.login(request, user)
-			return redirect('home')
+			return render(request, 'presc/home.html', {'username': username})
 		messages.error(request, 'Invalid credentials.')
 		return redirect('login')
 	return render(request, 'presc/login.html')
 
 def home(request):
-	return HttpResponse("Home Page")
-
-def nlp(request):
 	if request.method == 'POST':
 		sent = request.POST.get("sent")
 		data1 = pd.read_csv("data.csv")
@@ -72,4 +72,4 @@ def nlp(request):
 						print(datas)
 		return render(request, 'presc/table.html', context={'datas': datas})
 	else:
-		return render(request, 'presc/index.html')
+		return render(request, 'presc/home.html')

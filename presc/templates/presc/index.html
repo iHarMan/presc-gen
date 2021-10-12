@@ -4,16 +4,27 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<link rel="stylesheet" href="{% static 'presc/styles.css' %}">
+	<title>Landing</title>
+	<link rel="stylesheet" href="{% static 'presc/register.css' %}">
 </head>
 <body>
-	<h1>HOME</h1>
-	<form method="post">
-		{% csrf_token %}
-		<label for="sent" id="text">Type your sentence</label><br>
-		<input type="text" id="sent" name="sent" /><br>
-		<input type="submit" id="button"></input>
-	</form>
+	
+	<div class='bold-line'></div>
+	<div class='container'>
+	<div class='window'>
+		<div class='overlay'></div>
+		<div class='content'>
+		<div class='welcome'>Hello There!</div>
+		<div class='input-fields'>
+			
+			<form method="post">
+				{% csrf_token %}
+				<div><button type="submit" id="button" class='ghost-round full-width'><a href="{% url 'register' %}">Sign Up</a></button></div>
+				<div><button type="submit" id="button" class='ghost-round full-width'><a href="{% url 'login' %}">Sign In</a></button></div>
+			</form>
+		</div>
+		</div>
+	</div>
+	</div>
 </body>
 </html>
