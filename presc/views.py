@@ -32,7 +32,19 @@ def register(request):
 
 
 def login(request):
+	if request.method == 'POST':
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = auth.authenticate(request, username=username, password=password)
+		if user is not None:
+			auth.login(request, user)
+			return redirect('home')
+		messages.error(request, 'Invalid credentials.')
+		return redirect('login')
 	return render(request, 'presc/login.html')
+
+def home(request):
+	return HttpResponse("Home Page")
 
 def nlp(request):
 	if request.method == 'POST':
@@ -61,5 +73,3 @@ def nlp(request):
 		return render(request, 'presc/table.html', context={'datas': datas})
 	else:
 		return render(request, 'presc/index.html')
-
-

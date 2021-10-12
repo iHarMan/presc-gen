@@ -5,8 +5,54 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<link rel="stylesheet" href="{% static 'presc/register.css' %}">
 </head>
 <body>
-	<h1>Registered</h1>
+	
+	<div class='bold-line'></div>
+	<div class='container'>
+	<div class='window'>
+		<div class='overlay'></div>
+		<div class='content'>
+		<div class='welcome'>Hello There!</div>
+		<div class='input-fields'>
+			
+			<form method="post">
+				{% csrf_token %}
+
+				{% if messages %}
+					{% for message in messages %}
+						<p><u>{{ message }}</u></p>
+						<br>
+						<br>
+					{% endfor %}
+				{% endif %}
+
+				<label for='text'></label>
+				<input type='text' id="username" name="username" placeholder='Username' class='input-line full-width'></input>
+				<label for='password'></label>
+				<input type='password' id="password" name="password" placeholder='Password' class='input-line full-width'></input>
+
+				<p>Select User Type:</p>
+				<ul>
+					<li>
+						<label for="patient">Patient</label>
+						<input type="radio" id="patient" name="type" value="p">
+					</li>
+					<br>
+					<li>
+						<label for="doctor">Doctor</label>
+						<input type="radio" id="doctor" name="type" value="d">
+					</li>
+					<br>
+				</ul>
+				<div><button type="submit" id="button" class='ghost-round full-width'>Login</button></div>
+			</form>
+				<a href="{% url 'register'%}">Don't have an account? Sign up here.</a>
+				<br><br>
+		</div>
+		</div>
+	</div>
+	</div>
 </body>
 </html>
