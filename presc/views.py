@@ -1,7 +1,7 @@
-import re
 from django.core.checks import messages
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, response, JsonResponse
+from django.contrib import auth, messages
+from django.http import HttpResponse
 from .models import Profile
 from django.contrib.auth.models import User
 from nltk import word_tokenize
@@ -14,22 +14,25 @@ def register(request):
 		email = request.POST.get('email')
 		type = request.POST.get('type')
 
-		if User.object.filter(username=username).exists():
+		if User.objects.filter(username=username).exists():
 			messages.error(request, 'The username already exists')
-			return render(request, 'presc/login.html')
+			return render(request, 'presc/register.html')
 
-		if User.object.filter(email=email).exists():
+		if User.objects.filter(email=email).exists():
 			messages.error(request, 'The email already exists')
-			return render(request, 'presc/login.html')
+			return render(request, 'presc/register.html')
 		
 		newUser = User.objects.create_user(username=username, email=email, password=password)
 		profile = Profile(user=newUser, type=type)
-		newUser.save()
 		profile.save()
+		newUser.save()
 		messages.success(request, 'Your account has been created.')
-		return redirect('presc/login.html')
+		return redirect('login')
 	else:
 		return render(request,  'presc/register.html')
+
+def login(request):
+	return render(request, 'presc/login.html')
 
 def nlp(request):
 	if request.method == 'POST':

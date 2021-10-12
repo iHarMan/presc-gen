@@ -16,29 +16,41 @@
 		<div class='content'>
 		<div class='welcome'>Hello There!</div>
 		<div class='input-fields'>
-			{% csrf_token %}
-			<label for='text'></label>
-			<input type='text' id="username" name="username" placeholder='Username' class='input-line full-width'></input>
-			<label for='email'></label>
-			<input type='email' id="email" name="email" placeholder='Email' class='input-line full-width'></input>
-			<label for='password'></label>
-			<input type='password' id="password" name="password" placeholder='Password' class='input-line full-width'></input>
+			
+			<form method="post">
+				{% csrf_token %}
 
-			<p>Select User Type:</p>
-			<ul>
-				<li>
-					<label for="patient">Patient</label>
-					<input type="radio" id="patient" name="type" value="Patient">
-				</li>
-				<br>
-				<li>
-					<label for="doctor">Doctor</label>
-					<input type="radio" id="doctor" name="type" value="doctor">
-				</li>
-				<br>
-			</ul>
+				{% if messages %}
+					{% for message in messages %}
+						<p><u>{{ message }}</u></p>
+						<br>
+						<br>
+					{% endfor %}
+				{% endif %}
+
+				<label for='text'></label>
+				<input type='text' id="username" name="username" placeholder='Username' class='input-line full-width'></input>
+				<label for='email'></label>
+				<input type='email' id="email" name="email" placeholder='Email' class='input-line full-width'></input>
+				<label for='password'></label>
+				<input type='password' id="password" name="password" placeholder='Password' class='input-line full-width'></input>
+
+				<p>Select User Type:</p>
+				<ul>
+					<li>
+						<label for="patient">Patient</label>
+						<input type="radio" id="patient" name="type" value="Patient">
+					</li>
+					<br>
+					<li>
+						<label for="doctor">Doctor</label>
+						<input type="radio" id="doctor" name="type" value="doctor">
+					</li>
+					<br>
+				</ul>
+				<div><button type="submit" id="button" class='ghost-round full-width'>Create Account</button></div>
+			</form>
 		</div>
-		<div><button class='ghost-round full-width'>Create Account</button></div>
 		</div>
 	</div>
 	</div>
