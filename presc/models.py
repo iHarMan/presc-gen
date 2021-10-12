@@ -9,4 +9,4 @@ class Profile(models.Model):
 	email = models.TextField(default="")
 	type = models.CharField(max_length=1, choices=(('p', 'Patient'), ('d', 'Doctor')))
 	def __str__(self):
-		return str(self.user.username) + str(self.pk)
+		return str(self.user.username) + "'s profile"

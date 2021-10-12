@@ -12,7 +12,7 @@ def register(request):
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		email = request.POST.get('email')
-		type = request.POST.get('type')
+		type = str(request.POST.get('type'))
 
 		if User.objects.filter(username=username).exists():
 			messages.error(request, 'The username already exists')
@@ -23,13 +23,13 @@ def register(request):
 			return render(request, 'presc/register.html')
 		
 		newUser = User.objects.create_user(username=username, email=email, password=password)
-		profile = Profile(user=newUser, type=type)
-		profile.save()
+		profile = Profile(user=newUser, username=username, email=email, type=type)
 		newUser.save()
+		profile.save()
 		messages.success(request, 'Your account has been created.')
 		return redirect('login')
-	else:
-		return render(request,  'presc/register.html')
+	return render(request, 'presc/register.html')
+
 
 def login(request):
 	return render(request, 'presc/login.html')
