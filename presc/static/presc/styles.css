@@ -9,7 +9,7 @@ table, th, td {
   	margin: 8px 0;
 }
 #button{
-	background-color: #008CBA; /* Green */
+	background-color: #008CBA;  
 	border: none;
 	color: white;
 	padding: 15px 32px;
@@ -20,7 +20,4 @@ table, th, td {
 }
 #text{
 	color: black; transition: .5s; -moz-transition: .5s; -webkit-transition: .5s; -o-transition: .5s; font-family: 'Muli', sans-serif;
-}
-h1{
-	font-family: Helvetica, Arial, sans-serif;
 }
