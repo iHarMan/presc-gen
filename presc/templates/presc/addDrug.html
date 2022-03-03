@@ -1,0 +1,74 @@
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home</title>
+	<link rel="stylesheet" href="{% static 'presc/styles.css' %}">
+</head>
+<body>
+	<h1>Welcome, {{ user.username }}</h1>
+	<!-- <form method="post">
+		{% csrf_token %}
+		<label for="sent" id="text">Type your sentence</label><br>
+		<input type="text" id="sent" name="sent" /><br>
+		<input type="submit" id="button"></input>
+		<button type="submit" id="button" class='ghost-round full-width'><a href="{% url 'logout' %}">Logout</a></button>
+	</form> -->
+	<style>
+		.speech {
+		  border: 1px solid #ddd;
+		  width: 300px;
+		  padding: 0;
+		  margin: 0;
+		}
+		.speech input {
+		  border: 0;
+		  width: 240px;
+		  display: inline-block;
+		  height: 30px;
+		}
+		.speech img {
+		  float: right;
+		  width: 40px;
+		}
+	</style>
+	<form id="labnol" method="post">
+		{% csrf_token %}
+		<div class="speech">
+		  	<input type="text" name="sent" id="sent" placeholder="Speak" />
+			<img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
+			<!-- <input type="submit" id="button"></input> -->
+			<button type="submit" id="button" class='ghost-round full-width'><a href="{% url 'logout' %}">Logout</a></button>
+		</div>
+	</form>
+	
+	  
+	  <!-- HTML5 Speech Recognition API -->
+	  <script>
+		function startDictation() {
+		  if (window.hasOwnProperty('webkitSpeechRecognition')) {
+			var recognition = new webkitSpeechRecognition();
+	  
+			recognition.continuous = false;
+			recognition.interimResults = false;
+	  
+			recognition.lang = 'en-US';
+			recognition.start();
+	  
+			recognition.onresult = function (e) {
+			  document.getElementById('sent').value = e.results[0][0].transcript;
+			  recognition.stop();
+			//   alert(document.getElementById('sent').value);
+			  document.getElementById('labnol').submit();
+			};
+	  
+			recognition.onerror = function (e) {
+			  recognition.stop();
+			};
+		  }
+		}
+	  </script>
+</body>
+</html>
