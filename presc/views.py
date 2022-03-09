@@ -9,14 +9,22 @@ from django.contrib.auth.models import User
 from nltk import word_tokenize
 import pandas as pd
 
+dic = {}
 def landing(request):
 	return render(request, "presc/index.html")
-
+def profile(request):
+	dic_temp = {};
+	dic_temp['username'] = dic['username']
+	dic_temp['type'] = dic['type']
+	dic_temp['email'] = dic['email']
+	return render(request,'presc/profile.html' , dic_temp);
 def register(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		email = request.POST.get('email')
+		global dic;
+		dic['email'] = email
 		type = str(request.POST.get('type'))
 
 		if User.objects.filter(username=username).exists():
@@ -26,7 +34,7 @@ def register(request):
 		if User.objects.filter(email=email).exists():
 			messages.error(request, 'The email already exists')
 			return render(request, 'presc/register.html')
-		
+
 		newUser = User.objects.create_user(username=username, email=email, password=password)
 		profile = Profile(user=newUser, username=username, email=email, type=type)
 		newUser.save()
@@ -38,12 +46,17 @@ def register(request):
 
 def login(request):
 	if request.method == 'POST':
+		global dic
+		dic['username'] = request.POST.get('username')
+		dic['type'] = request.POST.get('type')
+
 		username = request.POST.get('username')
 		password = request.POST.get('password')
+
 		user = auth.authenticate(request, username=username, password=password)
 		if user is not None:
 			auth.login(request, user)
-			return redirect('home')
+			return render(request,'presc/home.html',dic)
 		messages.error(request, 'Invalid credentials.')
 		return redirect('login')
 	return render(request, 'presc/login.html')
@@ -61,6 +74,7 @@ def home(request):
 			prescriptions = Prescription.objects.filter(userId=request.user)
 			datas = []
 			for pres in prescriptions:
+				print(pres.pk)
 				datas.append({
 					'pk':pres.pk,
 					'name':pres.name
@@ -70,7 +84,11 @@ def home(request):
 			return render(request, 'presc/home.html')
 	else:
 		return redirect('login')
-
+def newprescription(request):
+	#adding new prescription
+	#1.check for exsisting Patients
+	#2.redirect to voice wala
+	return HttpResponse("helloo")
 def addDrug(request, pk):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -98,11 +116,11 @@ def addDrug(request, pk):
 								temp = Prescription.objects.create(userId=request.user, name=s)
 								drugs = Drugs.objects.create(prescription=temp, name=str(Name), uses=str(Uses), sideEffects=str(SideEffects))
 								drugs.save()
-								
+
 
 			t = Prescription.objects.get(pk=pk)
 			for drug in Drugs.objects.all().filter(prescription=t):
-				print(drug)
+				# print(drug)
 				data = {}
 				data['Name'] = drug.name
 				data['Uses'] = drug.uses
@@ -114,4 +132,3 @@ def addDrug(request, pk):
 			return render(request, 'presc/addDrug.html')
 	else:
 		return redirect('login')
-	
