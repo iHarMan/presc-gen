@@ -4,10 +4,11 @@ from .views import *
 urlpatterns = [
     path('', landing, name='landing'),
     path('logout/', logout, name='logout'),
-    path('home/', home, name='home'),
+    path('home/<str:type>/<str:username>', home, name='home'),
     path('add_drug/<int:pk>', addDrug, name='addDrug'),
     path('register/', register, name='register'),
     path('login/', login, name='login'),
+    path('check_prescription/', check_prescription, name='check_prescription'),
     path('login/newprescription/',newprescription,name = 'newprescription'),
     path('login/profile/',profile,name = 'profile')
     # path('myprescriptions/', viewPrescription, name='viewPrescription')

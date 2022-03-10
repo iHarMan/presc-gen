@@ -18,6 +18,7 @@ def profile(request):
 	dic_temp['type'] = dic['type']
 	dic_temp['email'] = dic['email']
 	return render(request,'presc/profile.html' , dic_temp);
+
 def register(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
@@ -56,7 +57,8 @@ def login(request):
 		user = auth.authenticate(request, username=username, password=password)
 		if user is not None:
 			auth.login(request, user)
-			return render(request,'presc/home.html',dic)
+			return redirect(home, type=dic['type'], username=dic['username'])
+			# return render(request,'presc/home.html', dic)
 		messages.error(request, 'Invalid credentials.')
 		return redirect('login')
 	return render(request, 'presc/login.html')
@@ -68,7 +70,23 @@ def logout(request):
 	else:
 		return redirect('login')
 
-def home(request):
+def check_prescription(request):
+	email = request.POST.get('email')
+	try:
+		user = User.objects.get(email=email)
+		profile = Profile.objects.get(user=user)
+		s = str(date.today())
+		presc = Prescription.objects.create(userId=user, name=s)
+		return redirect('/add_drug/'+str(presc.pk))
+	except User.DoesNotExist:
+		user = User.objects.create(email=email, username='dummy', password='123456')
+		profile = Profile.objects.create(user=user, type='p', username=user.username, email=user.email)
+		s = str(date.today())
+		presc = Prescription.objects.create(userId=user, name=s)
+		return redirect('/add_drug/'+str(presc.pk))
+	
+
+def home(request, type=None, username=None):
 	if request.user.is_authenticated:
 		if request.method == 'GET':
 			prescriptions = Prescription.objects.filter(userId=request.user)
@@ -79,16 +97,18 @@ def home(request):
 					'pk':pres.pk,
 					'name':pres.name
 				})
-			return render(request, 'presc/home.html', context={'datas':datas})
+			return render(request, 'presc/home.html', context={'datas':datas, 'type':type, 'username':username})
 		else:
 			return render(request, 'presc/home.html')
 	else:
 		return redirect('login')
+
 def newprescription(request):
 	#adding new prescription
 	#1.check for exsisting Patients
 	#2.redirect to voice wala
 	return HttpResponse("helloo")
+
 def addDrug(request, pk):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -117,7 +137,6 @@ def addDrug(request, pk):
 								drugs = Drugs.objects.create(prescription=temp, name=str(Name), uses=str(Uses), sideEffects=str(SideEffects))
 								drugs.save()
 
-
 			t = Prescription.objects.get(pk=pk)
 			for drug in Drugs.objects.all().filter(prescription=t):
 				# print(drug)
@@ -126,7 +145,7 @@ def addDrug(request, pk):
 				data['Uses'] = drug.uses
 				data['Effects'] = drug.sideEffects
 				datas.append(data)
-
+			
 			return render(request, 'presc/table.html', context={'datas': datas})
 		else:
 			return render(request, 'presc/addDrug.html')
