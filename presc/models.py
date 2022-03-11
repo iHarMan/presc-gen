@@ -27,5 +27,3 @@ class Drugs(models.Model):
 	# user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
-
-

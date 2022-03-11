@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta,date
 from datetime import date
 from django.core.checks import messages
 from django.shortcuts import render, redirect
@@ -10,6 +10,20 @@ from nltk import word_tokenize
 import pandas as pd
 
 dic = {}
+def yp(request):
+	#patients prescription
+	Prescription = {
+	'patients_name':dic['username'],
+	'med':'crocine',
+	'dosage':2
+	}
+	return render(request , 'presc/yp.html',{'p':Prescription})
+def vp(request):
+	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])
+	# return render(request, "presc/vp.html",{d : drug_date});
+	a=[date.today(), date.today() + timedelta(days=1), date.today() - timedelta(days=1)]
+	a.sort(reverse=True)
+	return render(request,"presc/vp.html",{'pres':a})
 def landing(request):
 	return render(request, "presc/index.html")
 def profile(request):
@@ -84,7 +98,7 @@ def check_prescription(request):
 		s = str(date.today())
 		presc = Prescription.objects.create(userId=user, name=s)
 		return redirect('/add_drug/'+str(presc.pk))
-	
+
 
 def home(request, type=None, username=None):
 	if request.user.is_authenticated:
@@ -145,7 +159,7 @@ def addDrug(request, pk):
 				data['Uses'] = drug.uses
 				data['Effects'] = drug.sideEffects
 				datas.append(data)
-			
+
 			return render(request, 'presc/table.html', context={'datas': datas})
 		else:
 			return render(request, 'presc/addDrug.html')
