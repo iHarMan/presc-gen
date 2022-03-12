@@ -1,5 +1,10 @@
 from datetime import datetime,timedelta,date
 from datetime import date
+from dbm import dumb
+import email
+import re
+import string
+import random
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import auth, messages
@@ -10,6 +15,7 @@ from nltk import word_tokenize
 import pandas as pd
 
 dic = {}
+EMAIL_REGEX = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 def yp(request):
 	#patients prescription
 	Prescription = {
@@ -18,14 +24,17 @@ def yp(request):
 	'dosage':2
 	}
 	return render(request , 'presc/yp.html',{'p':Prescription})
+
 def vp(request):
 	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])
 	# return render(request, "presc/vp.html",{d : drug_date});
 	a=[date.today(), date.today() + timedelta(days=1), date.today() - timedelta(days=1)]
 	a.sort(reverse=True)
 	return render(request,"presc/vp.html",{'pres':a})
+
 def landing(request):
 	return render(request, "presc/index.html")
+	
 def profile(request):
 	dic_temp = {};
 	dic_temp['username'] = dic['username']
@@ -60,6 +69,7 @@ def register(request):
 
 
 def login(request):
+	
 	if request.method == 'POST':
 		global dic
 		dic['username'] = request.POST.get('username')
@@ -67,8 +77,19 @@ def login(request):
 
 		username = request.POST.get('username')
 		password = request.POST.get('password')
+		print(username)
+		if re.fullmatch(EMAIL_REGEX, username):
+			user = User.objects.get(email=username)
+			username = user.username
+			dic['username'] = username
+			print(username)
+
+			# except:
+			# 	messages.error(request, "Invalid Credentials")
+			# 	return redirect('login')
 
 		user = auth.authenticate(request, username=username, password=password)
+		print(username)
 		if user is not None:
 			auth.login(request, user)
 			return redirect(home, type=dic['type'], username=dic['username'])
@@ -93,7 +114,11 @@ def check_prescription(request):
 		presc = Prescription.objects.create(userId=user, name=s)
 		return redirect('/add_drug/'+str(presc.pk))
 	except User.DoesNotExist:
-		user = User.objects.create(email=email, username='dummy', password='123456')
+		res = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7))
+		dummyPass = "Pass123@@"
+		user = User.objects.create(email=email, username=res, password=dummyPass)
+		user.set_password(dummyPass)
+		user.save()
 		profile = Profile.objects.create(user=user, type='p', username=user.username, email=user.email)
 		s = str(date.today())
 		presc = Prescription.objects.create(userId=user, name=s)
