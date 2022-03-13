@@ -89,6 +89,13 @@
 			<a class="navbar-brand" href="#">
 				<h1 class="display-3">Welcome {{username}}</h1>
 			</a>
+			<div class="d-flex">
+				<form class="" action="{% url 'logout' %}">
+					<button type="submit" class="btn btn-secondary btn-lg" style="background-color: rgb(255,255,255);color:black">LOGOUT</button>
+
+				</form>
+
+			</div>
 		</div>
 	</nav>
 	<div class="container p-3">
@@ -104,7 +111,7 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 					<div class="card-body">
 						<h5 class="card-title">Profile</h5>
 
-						<p class="card-text">Click here to get quick access of your profile.</p>
+						<p class="card-text">Click here to get quick access of your profile</p>
 						<a class="btn btn-primary" href="profile/" role="button" style="background-color: rgb(24,7,98);margin-top:30px">Profile</a>
 					</div>
 				</div>

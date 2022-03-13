@@ -34,13 +34,16 @@ def vp(request):
 
 def landing(request):
 	return render(request, "presc/index.html")
-	
+
+def profile_d(request):
+	return render(request, 'presc/profile_d.html', dic)
+
 def profile(request):
 	dic_temp = {};
-	dic_temp['username'] = dic['username']
-	dic_temp['type'] = dic['type']
-	dic_temp['email'] = dic['email']
-	return render(request,'presc/profile.html' , dic_temp);
+	# dic_temp['username'] = dic['username']
+	# dic_temp['type'] = dic['type']
+	# dic_temp['email'] = dic['email']
+	return render(request,'presc/profile.html' , dic);
 
 def register(request):
 	if request.method == 'POST':
@@ -48,7 +51,6 @@ def register(request):
 		password = request.POST.get('password')
 		email = request.POST.get('email')
 		global dic;
-		dic['email'] = email
 		type = str(request.POST.get('type'))
 
 		if User.objects.filter(username=username).exists():
@@ -69,20 +71,18 @@ def register(request):
 
 
 def login(request):
-	
+
 	if request.method == 'POST':
 		global dic
 		dic['username'] = request.POST.get('username')
 		dic['type'] = request.POST.get('type')
-
+		dic['email'] = request.POST.get('email')
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		print(username)
 		if re.fullmatch(EMAIL_REGEX, username):
 			user = User.objects.get(email=username)
 			username = user.username
-			dic['username'] = username
-			print(username)
 
 			# except:
 			# 	messages.error(request, "Invalid Credentials")
