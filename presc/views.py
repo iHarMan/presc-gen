@@ -9,7 +9,7 @@ from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import auth, messages
 from django.http import HttpResponse
-from .models import Prescription, Profile, Drugs
+from .models import Doctor, Patient, Prescription, Drugs
 from django.contrib.auth.models import User
 from nltk import word_tokenize
 import pandas as pd
@@ -18,19 +18,31 @@ dic = {}
 EMAIL_REGEX = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 def yp(request):
 	#patients prescription
-	Prescription = {
+	prescription = {
 	'patients_name':dic['username'],
 	'med':'crocine',
 	'dosage':2
 	}
-	return render(request , 'presc/yp.html',{'p':Prescription})
+	return render(request , 'presc/yp.html',{'p':prescription})
 
 def vp(request):
 	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])
 	# return render(request, "presc/vp.html",{d : drug_date});
 	a=[date.today(), date.today() + timedelta(days=1), date.today() - timedelta(days=1)]
 	a.sort(reverse=True)
-	return render(request,"presc/vp.html",{'pres':a})
+	prescriptions = Prescription.objects.filter(userId=request.user)
+	return render(request,"presc/vp.html",{'pres':a, 'press': prescriptions})
+
+def vp2(request, username):
+	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])
+	# return render(request, "presc/vp.html",{d : drug_date});
+	a=[date.today(), date.today() + timedelta(days=1), date.today() - timedelta(days=1)]
+	a.sort(reverse=True)
+	data = []
+	user = User.objects.get(username=username)
+	for pres in Prescription.objects.filter(userId=user):
+		data.append(pres)
+	return render(request,"presc/prescription.html", {'datas':data})
 
 def landing(request):
 	return render(request, "presc/index.html")
@@ -39,18 +51,18 @@ def profile_d(request):
 	return render(request, 'presc/profile_d.html', dic)
 
 def profile(request):
-	dic_temp = {};
+	dic_temp = {}
 	# dic_temp['username'] = dic['username']
 	# dic_temp['type'] = dic['type']
 	# dic_temp['email'] = dic['email']
-	return render(request,'presc/profile.html' , dic);
+	return render(request,'presc/profile.html' , dic)
 
 def register(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		email = request.POST.get('email')
-		global dic;
+		global dic
 		type = str(request.POST.get('type'))
 
 		if User.objects.filter(username=username).exists():
@@ -62,9 +74,11 @@ def register(request):
 			return render(request, 'presc/register.html')
 
 		newUser = User.objects.create_user(username=username, email=email, password=password)
-		profile = Profile(user=newUser, username=username, email=email, type=type)
 		newUser.save()
-		profile.save()
+		if type == 'doctor':
+			Doctor.objects.create(user=newUser)
+		elif type == 'patient':
+			Patient.objects.create(user=newUser)
 		messages.success(request, 'Your account has been created.')
 		return redirect('login')
 	return render(request, 'presc/register.html')
@@ -109,7 +123,6 @@ def check_prescription(request):
 	email = request.POST.get('email')
 	try:
 		user = User.objects.get(email=email)
-		profile = Profile.objects.get(user=user)
 		s = str(date.today())
 		presc = Prescription.objects.create(userId=user, name=s)
 		return redirect('/add_drug/'+str(presc.pk))
@@ -119,7 +132,7 @@ def check_prescription(request):
 		user = User.objects.create(email=email, username=res, password=dummyPass)
 		user.set_password(dummyPass)
 		user.save()
-		profile = Profile.objects.create(user=user, type='p', username=user.username, email=user.email)
+		Patient.objects.create(user=user, doctor=request.user)
 		s = str(date.today())
 		presc = Prescription.objects.create(userId=user, name=s)
 		return redirect('/add_drug/'+str(presc.pk))
@@ -190,3 +203,23 @@ def addDrug(request, pk):
 			return render(request, 'presc/addDrug.html')
 	else:
 		return redirect('login')
+
+def lp(request): # List Patients
+	if request.method == 'GET':
+		doctor = Doctor.objects.get(user=request.user)
+		patients = Patient.objects.filter(doctor=doctor)
+		ret_dict = []
+		for patient in patients:
+			temp = {}
+			temp['username'] = patient.user.username
+			temp['email'] = patient.user.email
+			ret_dict.append(temp)
+		return render(request, 'presc/patients.html', context={'datas': ret_dict})
+
+def generic_profile_view(request, username):
+	if request.method == 'GET':
+		user = User.objects.get(username=username)
+		data = {}
+		data['username'] = user.username
+		data['email'] = user.email
+		return render(request, 'presc/profile_generic.html', context={'datas': data})

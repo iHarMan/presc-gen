@@ -1,18 +1,22 @@
 from email.policy import default
 from statistics import mode
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Profile(models.Model):
+class Doctor(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	username = models.CharField(max_length=200, default="")
-	email = models.TextField(default="")
-	type = models.CharField(max_length=1, choices=(('p', 'Patient'), ('d', 'Doctor')))
+
 	def __str__(self):
-		return str(self.user.username) + "'s profile"
+		return str(self.user.username)
+	
+class Patient(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	doctor = models.ManyToManyField(Doctor, null=True, blank=True)
+
+	def __str__(self) -> str:
+		return str(self.user.username)
 
 # yeh hai sab din ka collection
 class Prescription(models.Model):
