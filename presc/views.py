@@ -16,14 +16,17 @@ import pandas as pd
 
 dic = {}
 EMAIL_REGEX = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
-def yp(request):
+
+def yp(request, pk):
 	#patients prescription
-	prescription = {
-	'patients_name':dic['username'],
-	'med':'crocine',
-	'dosage':2
-	}
-	return render(request , 'presc/yp.html',{'p':prescription})
+	prescription = Prescription.objects.get(pk=pk)
+	drugs = Drugs.objects.filter(prescription=prescription)
+	return render(request , 'presc/yp.html',{'p':prescription, 'drugs': drugs})
+
+def presc_his(request, username):
+	user = User.objects.get(username=username)
+	prescriptions = Prescription.objects.filter(userId=user)
+	return render(request, 'presc/presc_his.html', {'pres': prescriptions})
 
 def vp(request):
 	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])
@@ -31,7 +34,8 @@ def vp(request):
 	a=[date.today(), date.today() + timedelta(days=1), date.today() - timedelta(days=1)]
 	a.sort(reverse=True)
 	prescriptions = Prescription.objects.filter(userId=request.user)
-	return render(request,"presc/vp.html",{'pres':a, 'press': prescriptions})
+	print(prescriptions)
+	return render(request,"presc/vp.html",{'pres': prescriptions})
 
 def vp2(request, username):
 	# drug_date = Drugs.objects.get(date = date).filter(user = dic['username'])

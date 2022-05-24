@@ -23,6 +23,12 @@
 				<h1 class="display-3">Welcome Dr. {{username}}</h1>
 			</a>
 		</div>
+		<div class="d-flex">
+			<form class="" action="{% url 'logout' %}">
+				<button type="submit" class="btn btn-secondary btn-lg" style="background-color: rgb(255,255,255);color:black">LOGOUT</button>
+
+			</form>
+		</div>
 	</nav>
 	<div class="container p-3">
 		<div class="row">
@@ -94,7 +100,6 @@
 					<button type="submit" class="btn btn-secondary btn-lg" style="background-color: rgb(255,255,255);color:black">LOGOUT</button>
 
 				</form>
-
 			</div>
 		</div>
 	</nav>

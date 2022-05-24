@@ -24,6 +24,9 @@
 					<td>
 						{{ data.email }}
 					</td>
+					<td>
+						<a href={% url 'presc-his' username=data.username %}>View Prescription</a>
+					</td>
 				</tr>
 			{% endfor %}
 		{% endif %}

@@ -14,9 +14,9 @@ urlpatterns = [
     path('home/d/profile/',profile_d,name = 'profile_d'),
     path('home/d/patients/', lp, name='patients'),
     path('home/p/view_presc/', vp , name = 'view_all_presc'),
-    path('home/p/view_presc/<str:username>/', vp2 , name = 'view_all_presc-patient'),
     path('profile/<str:username>/', generic_profile_view, name='generic-profile-view'),
-    path('home/p/view_presc/your_presc/', yp , name = 'your_presc'),
+    path('home/p/view_presc/your_presc/<int:pk>', yp , name = 'your_presc'),
+    path('prescription_history/<str:username>', presc_his, name='presc-his'),
 
     # path('myprescriptions/', viewPrescription, name='viewPrescription')
 ]
