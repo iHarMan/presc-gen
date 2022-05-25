@@ -1,35 +1,91 @@
 {% load static %}
 
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" href="{% static 'presc/styles.css' %}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	<!-- <link rel="stylesheet" href="{% static 'presc/styles.css' %}"> -->
 </head>
+
 <body>
-	<h1>Patients</h1>
-	<table>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+	<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(24,7,98)">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<h1 class="display-3">Patients Visited</h1>
+			</a>
+		</div>
+		<!-- <div class="d-flex">
+			<form class="" action="{% url 'logout' %}">
+				<button type="submit" class="btn btn-secondary btn-lg" style="background-color: rgb(255,255,255);color:black">LOGOUT</button>
+
+			</form>
+		</div> -->
+	</nav>
+	<div class="row shadow p-3 mb-5 bg-white rounded">
+		<div class="table-responsive">
+			<table class="table text-center">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Email</th>
+						<th scope="col"> View Prescription</th>
+					</tr>
+
+				</thead>
+				<tbody>
+					{% if datas %}
+					{% for data in datas %}
+					<tr>
+						<td>
+							<a href={% url 'generic-profile-view' username=data.username %}>{{ data.username }}</a>
+						</td>
+						<td>
+							{{ data.email }}
+						</td>
+						<td>
+							<a href={% url 'presc-his' username=data.username %} style="background-color: rgb(24,7,98);
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;">View Prescription</a>
+						</td>
+					</tr>
+					{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- <table>
 		<tr>
-		  <th>Name</th>
-		  <th>E-Mail</th>
+			<th>Name</th>
+			<th>E-Mail</th>
 		</tr>
 		{% if datas %}
-			{% for data in datas %}
-				<tr>
-					<td>
-						<a href={% url 'generic-profile-view' username=data.username %}>{{ data.username }}</a>
-					</td>
-					<td>
-						{{ data.email }}
-					</td>
-					<td>
-						<a href={% url 'presc-his' username=data.username %}>View Prescription</a>
-					</td>
-				</tr>
-			{% endfor %}
+		{% for data in datas %}
+		<tr>
+			<td>
+				<a href={% url 'generic-profile-view' username=data.username %}>{{ data.username }}</a>
+			</td>
+			<td>
+				{{ data.email }}
+			</td>
+			<td>
+				<a href={% url 'presc-his' username=data.username %}>View Prescription</a>
+			</td>
+		</tr>
+		{% endfor %}
 		{% endif %}
-	</table>
+	</table> -->
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 {% load static %}
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,30 +8,32 @@
 	<title>Document</title>
 	<link rel="stylesheet" href="{% static 'presc/styles.css' %}">
 </head>
+
 <body>
 	<h1>Prescription</h1>
 	<table>
 		{% csrf_token %}
 		<tr>
-		  <th>Name</th>
-		  <th>Uses</th>
-		  <th>Side Effects</th>
+			<th>Name</th>
+			<th>Uses</th>
+			<th>Side Effects</th>
 		</tr>
 		{% if datas %}
-			{% for data in datas %}
-				<tr>
-					<td>
-						{{ data.Name }}
-					</td>
-					<td>
-						{{ data.Uses }}
-					</td>
-					<td>
-						{{ data.Effects }}
-					</td>
-				</tr>
-			{% endfor %}
+		{% for data in datas %}
+		<tr>
+			<td>
+				{{ data.Name }}
+			</td>
+			<td>
+				{{ data.Uses }}
+			</td>
+			<td>
+				{{ data.Effects }}
+			</td>
+		</tr>
+		{% endfor %}
 		{% endif %}
 	</table>
 </body>
+
 </html>

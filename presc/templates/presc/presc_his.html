@@ -13,8 +13,19 @@
 </head>
 
 <body>
-  <h1 class="display-4">Prescription History</h1>
-  <h1>{{d}}</h1>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(24,7,98)">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <h1 class="display-4">Prescription History</h1>
+      </a>
+    </div>
+    <!-- <div class="d-flex">
+			<form class="" action="{% url 'logout' %}">
+				<button type="submit" class="btn btn-secondary btn-lg" style="background-color: rgb(255,255,255);color:black">LOGOUT</button>
+
+			</form>
+		</div> -->
+  </nav>
   <div class="containermain">
     {% for pre in pres %}
     <div class="card" style="
